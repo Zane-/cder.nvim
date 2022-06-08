@@ -7,7 +7,7 @@ A [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) extension f
 ## Dependencies
 
 - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
-- By default, the extension uses [fd](https://github.com/sharkdp/fd) to list directories and [bat](https://github.com/sharkdp/bat) to provide paging. You don't have to use these if you don't want to, but the dafault config will not work if you do not install them.
+- By default, the extension uses [fd](https://github.com/sharkdp/fd) to list directories and [bat](https://github.com/sharkdp/bat) to provide paging. You don't have to use these if you don't want to, but the default config will not work if you do not install them.
 - Additionally, `bash` is used to pipe the output of `fd` into `bat`, so if `bash` is not installed, the `command_executor` option will need to be changed.
 
 ## Setup
@@ -46,8 +46,8 @@ command_executer = { 'bash', '-c' },
 --   previewer_command = {'exa', '-a', '--icons'}
 previewer_command = 'ls -a',
 
--- The command used to as a pager. Receives the output of
--- the previewer_command as input. Defaults to bat.
+-- The command used to page directory previews, defaults to bat.
+-- Receives the output of the previewer_commadand as input.
 -- Example without bat:
 --   pager_command = 'less -RS'
 pager_command = 'bat --plain --paging=always --pager="less -RS"',
