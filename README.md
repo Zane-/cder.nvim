@@ -8,10 +8,11 @@ A [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) extension f
 
 - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
 - By default, the extension uses [fd](https://github.com/sharkdp/fd) to list directories and [bat](https://github.com/sharkdp/bat) to provide paging. You don't have to use these if you don't want to, but the dafault config will not work if you do not install them.
+- Additionally, `bash` is used to pipe the output of `fd` into `bat`, so if `bash` is not installed, the `command_executor` option will need to be changed.
 
 ## Setup
 
-Install using your favorite package manager:
+Install using your favorite plugin manager:
 
 [packer.nvim](https://github.com/wbthomason/packer.nvim):
 
