@@ -47,7 +47,7 @@ command_executer = { 'bash', '-c' },
 previewer_command = 'ls -a',
 
 -- The command used to page directory previews, defaults to bat.
--- Receives the output of the previewer_commadand as input.
+-- Receives the output of the previewer_command as input.
 -- Example without bat:
 --   pager_command = 'less -RS'
 pager_command = 'bat --plain --paging=always --pager="less -RS"',
