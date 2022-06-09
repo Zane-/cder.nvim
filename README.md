@@ -2,7 +2,7 @@
 
 A [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim) extension for quickly changing your working directory.
 
-![preview](https://user-images.githubusercontent.com/6345012/172458716-fa9d61db-61d4-4e66-a312-cbecfbc5d792.gif)
+![preview](https://user-images.githubusercontent.com/6345012/172769523-8cc850d1-34d9-40ed-bc7a-d010fb877e0e.gif)
 
 ## Dependencies
 
@@ -20,7 +20,7 @@ Install using your favorite plugin manager:
 use 'zane-/cder.nvim'
 ```
 
-Load the extension in telescope:
+Load the extension into telescope:
 
 ```lua
 require('telescope').load_extension('cder')
@@ -39,20 +39,22 @@ prompt_title = 'cder',
 dir_command = { 'fd', '--type=d', '.', os.getenv('HOME') },
 
 -- The binary used to execute previewer_command | pager_command.
+-- This is needed because termopen in Neovim does not support piping
+-- multiple commands, so we get around this by just using bash -c.
 command_executer = { 'bash', '-c' },
 
--- The command used to preview directories, defaults to ls.
+-- The command used to preview directories. Defaults to ls.
 -- Example:
---   previewer_command = {'exa', '-a', '--icons'}
+--   previewer_command = 'exa -a --icons'
 previewer_command = 'ls -a',
 
--- The command used to page directory previews, defaults to bat.
+-- The command used to page directory previews. Defaults to bat.
 -- Receives the output of the previewer_command as input.
 -- Example without bat:
 --   pager_command = 'less -RS'
 pager_command = 'bat --plain --paging=always --pager="less -RS"',
 
--- Function to create an entry in the results picker given
+-- Function to create an entry in the picker given
 -- a line outputted from the dir_command.
 --   value is used as the directory in the :cd command
 --   display is what is actually displayed, so this can
@@ -68,13 +70,26 @@ entry_maker = function(line)
 end,
 ```
 
-To change these, use telescope's `setup` function:
+To change these, use telescope's `setup` function. Below is the config used in the demo gif above:
 
 ```lua
 require('telescope').setup({
   extensions = {
     cder = {
-      previewer_command = 'exa --color=always -a --icons',
+      previewer_command =
+        'exa '..
+        '-a '..
+        '--color=always '..
+        '-T '..
+        '--level=3 '..
+        '--icons '..
+        '--git-ignore '..
+        '--long '..
+        '--no-permissions '..
+        '--no-user '..
+        '--no-filesize '..
+        '--git '..
+        '--ignore-glob=.git',
     },
   },
 })
