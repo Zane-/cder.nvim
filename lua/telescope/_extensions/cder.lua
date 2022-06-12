@@ -72,7 +72,9 @@ local function run()
           opts.command_executer,
           opts.previewer_command
             .. ' '
+            .. '"'
             .. entry.value
+            .. '"'
             .. ' | '
             .. opts.pager_command,
         })
