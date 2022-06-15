@@ -62,21 +62,22 @@ local function setup(o)
   opts = vim.tbl_deep_extend('force', opts, o)
 end
 
-local function run()
-  pickers.new(opts, {
-    prompt_title = opts.prompt_title,
-    finder = finders.new_oneshot_job(opts.dir_command, opts),
+local function run(o)
+  o = o and vim.tbl_deep_extend('force', opts, o) or opts
+  pickers.new(o, {
+    prompt_title = o.prompt_title,
+    finder = finders.new_oneshot_job(o.dir_command, o),
     previewer = previewers.new_termopen_previewer({
       get_command = function(entry)
         return vim.tbl_flatten({
-          opts.command_executer,
-          opts.previewer_command
+          o.command_executer,
+          o.previewer_command
             .. ' '
             .. '"'
             .. entry.value
             .. '"'
             .. ' | '
-            .. opts.pager_command,
+            .. o.pager_command,
         })
       end,
     }),
