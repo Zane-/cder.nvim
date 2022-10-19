@@ -55,11 +55,34 @@ local opts = {
       ordinal = line,
     }
   end,
+
+  -- A mapping should be a function that takes as parameter the selected
+  -- directory as a string.
+  mappings = {
+    default = function(directory)
+      vim.cmd.cd(directory)
+    end,
+    ['<C-t>'] = function(directory)
+      vim.cmd.tcd(directory)
+    end,
+  },
 }
 
 local function setup(o)
   o = o or {}
   opts = vim.tbl_deep_extend('force', opts, o)
+end
+
+local function mapping(prompt_bufnr, command)
+  return function()
+    -- Close Telescope window
+    actions.close(prompt_bufnr)
+
+    local directory = action_state.get_selected_entry().value
+    if directory ~= nil then
+      command(directory)
+    end
+  end
 end
 
 local function run(o)
@@ -82,15 +105,19 @@ local function run(o)
       end,
     }),
     sorter = sorters.get_fuzzy_file(),
-    attach_mappings = function(prompt_bufnr, _)
-      actions.select_default:replace(function()
-        actions.close(prompt_bufnr)
+    attach_mappings = function(prompt_bufnr, map)
+      actions.select_default:replace(
+        mapping(prompt_bufnr, opts.mappings.default)
+      )
 
-        local directory = action_state.get_selected_entry()
-        if directory ~= nil then
-          vim.api.nvim_command('cd ' .. directory.value)
+      -- Other mappings
+      for key, command in pairs(opts.mappings) do
+        if key ~= 'default' then
+          map('i', key, mapping(prompt_bufnr, command))
+          map('n', key, mapping(prompt_bufnr, command))
         end
-      end)
+      end
+
       return true
     end,
   }):find()

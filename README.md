@@ -68,6 +68,17 @@ entry_maker = function(line)
     ordinal = line,
   }
 end,
+
+-- A mapping should be a function that takes as parameter the selected
+-- directory as a string.
+mappings = {
+  default = function(directory)
+    vim.cmd.cd(directory)
+  end,
+  ['<C-t>'] = function(directory)
+    vim.cmd.tcd(directory)
+  end,
+},
 ```
 
 To change these, use telescope's `setup` function. Below is the config used in the demo gif above:
@@ -102,7 +113,9 @@ require('telescope').setup({
 
 ### Mappings
 
-| Mapping    | Action                                         |
-|------------|------------------------------------------------|
-| `Ctrl + d` | Scroll the preview down                        |
-| `Ctrl + u` | Scroll the preview up                          |
+| Mapping    | Action                                    |
+| ---------- | ----------------------------------------- |
+| `Ctrl + d` | Scroll the preview down                   |
+| `Ctrl + u` | Scroll the preview up                     |
+| `Enter`    | Change directory                          |
+| `Ctrl + t` | Change directory for the current tab page |
