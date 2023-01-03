@@ -34,6 +34,10 @@ local opts = {
   --   previewer_command = 'exa -a --icons'
   previewer_command = 'ls -a',
 
+  entry_value_fn = function(entry_value)
+    return '"' .. entry_value .. '"'
+  end,
+
   -- The command used to page directory previews. Defaults to bat.
   -- Receives the output of the previewer_command as input.
   -- Example without bat:
@@ -96,9 +100,7 @@ local function run(o)
           o.command_executer,
           o.previewer_command
             .. ' '
-            .. '"'
-            .. entry.value
-            .. '"'
+            .. o.entry_value_fn(entry.value)
             .. ' | '
             .. o.pager_command,
         })
