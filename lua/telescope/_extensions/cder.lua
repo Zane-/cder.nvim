@@ -34,6 +34,8 @@ local opts = {
   --   previewer_command = 'exa -a --icons'
   previewer_command = 'ls -a',
 
+  -- A function to return an entry given an entry produced 
+  -- by previewer_command. Returns the entry directly by default.
   entry_value_fn = function(entry_value)
     return '"' .. entry_value .. '"'
   end,
