@@ -16,7 +16,9 @@ local sorters = require('telescope.sorters')
 
 local opts = {
   -- The title of the prompt.
-  prompt_title = 'cder',
+  prompt_title = function()
+    return "cder"
+  end,
 
   -- The command used to generate a list of directories.
   -- Defaults to fd on the home directory.
@@ -91,8 +93,18 @@ local function mapping(prompt_bufnr, command)
   end
 end
 
+local function resolve_prompt_title(prompt_title)
+  local prompt_type = type(prompt_title)
+  if prompt_type == "function" then
+    return prompt_title()
+  else
+    return prompt_title
+  end
+end
+
 local function run(o)
   o = o and vim.tbl_deep_extend('force', opts, o) or opts
+  o.prompt_title = resolve_prompt_title(o.prompt_title)
   pickers.new(o, {
     prompt_title = o.prompt_title,
     finder = finders.new_oneshot_job(o.dir_command, o),
