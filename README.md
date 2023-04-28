@@ -36,6 +36,8 @@ prompt_title = 'cder',
 -- Defaults to fd on the home directory.
 -- Example for showing hidden directories:
 --   dir_command = { 'fd', '--hidden', '--type=d', '.', os.getenv('HOME') },
+-- Example for excluding certain directories:
+--   dir_command = { 'fd', '--exclude=Library', '--exclude=Pictures', '--type=d', '.', os.getenv('HOME') },  
 dir_command = { 'fd', '--type=d', '.', os.getenv('HOME') },
 
 -- The binary used to execute previewer_command | pager_command.
