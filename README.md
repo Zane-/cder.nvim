@@ -31,7 +31,7 @@ Default config:
 ```lua
 -- The title of the prompt.
 prompt_title = function()
-    return vim.fn.getcwd()
+    return 'cwd:' .. vim.fn.getcwd()
 end,
 
 -- The command used to generate a list of directories.
