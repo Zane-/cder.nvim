@@ -17,13 +17,15 @@ local sorters = require('telescope.sorters')
 local opts = {
   -- The title of the prompt.
   prompt_title = function()
-    return "cder"
+    return 'cwd: ' .. vim.fn.getcwd()
   end,
 
   -- The command used to generate a list of directories.
   -- Defaults to fd on the home directory.
   -- Example for showing hidden directories:
   --   dir_command = { 'fd', '--hidden', '--type=d', '.', os.getenv('HOME') },
+  -- Example for excluding certain directories:
+  --   dir_command = { 'fd', '--exclude=Library', '--exclude=Pictures', '--type=d', '.', os.getenv('HOME') },
   dir_command = { 'fd', '--type=d', '.', os.getenv('HOME') },
 
   -- The binary used to execute previewer_command | pager_command.
@@ -36,7 +38,7 @@ local opts = {
   --   previewer_command = 'exa -a --icons'
   previewer_command = 'ls -a',
 
-  -- A function to return an entry given an entry produced 
+  -- A function to return an entry given an entry produced
   -- by dir_command. Returns the entry directly by default.
   entry_value_fn = function(entry_value)
     return '"' .. entry_value .. '"'
@@ -95,7 +97,7 @@ end
 
 local function resolve_prompt_title(prompt_title)
   local prompt_type = type(prompt_title)
-  if prompt_type == "function" then
+  if prompt_type == 'function' then
     return prompt_title()
   else
     return prompt_title
@@ -105,38 +107,40 @@ end
 local function run(o)
   o = o and vim.tbl_deep_extend('force', opts, o) or opts
   o.prompt_title = resolve_prompt_title(o.prompt_title)
-  pickers.new(o, {
-    prompt_title = o.prompt_title,
-    finder = finders.new_oneshot_job(o.dir_command, o),
-    previewer = previewers.new_termopen_previewer({
-      get_command = function(entry)
-        return vim.tbl_flatten({
-          o.command_executer,
-          o.previewer_command
-            .. ' '
-            .. o.entry_value_fn(entry.value)
-            .. ' | '
-            .. o.pager_command,
-        })
-      end,
-    }),
-    sorter = sorters.get_fuzzy_file(),
-    attach_mappings = function(prompt_bufnr, map)
-      actions.select_default:replace(
-        mapping(prompt_bufnr, opts.mappings.default)
-      )
+  pickers
+    .new(o, {
+      prompt_title = o.prompt_title,
+      finder = finders.new_oneshot_job(o.dir_command, o),
+      previewer = previewers.new_termopen_previewer({
+        get_command = function(entry)
+          return vim.tbl_flatten({
+            o.command_executer,
+            o.previewer_command
+              .. ' '
+              .. o.entry_value_fn(entry.value)
+              .. ' | '
+              .. o.pager_command,
+          })
+        end,
+      }),
+      sorter = sorters.get_fuzzy_file(),
+      attach_mappings = function(prompt_bufnr, map)
+        actions.select_default:replace(
+          mapping(prompt_bufnr, opts.mappings.default)
+        )
 
-      -- Other mappings
-      for key, command in pairs(opts.mappings) do
-        if key ~= 'default' then
-          map('i', key, mapping(prompt_bufnr, command))
-          map('n', key, mapping(prompt_bufnr, command))
+        -- Other mappings
+        for key, command in pairs(opts.mappings) do
+          if key ~= 'default' then
+            map('i', key, mapping(prompt_bufnr, command))
+            map('n', key, mapping(prompt_bufnr, command))
+          end
         end
-      end
 
-      return true
-    end,
-  }):find()
+        return true
+      end,
+    })
+    :find()
 end
 
 return telescope.register_extension({

@@ -30,7 +30,9 @@ Default config:
 
 ```lua
 -- The title of the prompt.
-prompt_title = 'cder',
+prompt_title = function()
+    return vim.fn.getcwd()
+end,
 
 -- The command used to generate a list of directories.
 -- Defaults to fd on the home directory.
