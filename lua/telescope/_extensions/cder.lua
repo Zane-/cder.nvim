@@ -23,10 +23,10 @@ local opts = {
   -- The command used to generate a list of directories.
   -- Defaults to fd on the home directory.
   -- Example for showing hidden directories:
-  --   dir_command = { 'fd', '--hidden', '--type=d', '.', os.getenv('HOME') },
+  --   dir_command = { 'fd', '--hidden', '--type=d', '.', vim.uv.os_homedir() },
   -- Example for excluding certain directories:
-  --   dir_command = { 'fd', '--exclude=Library', '--exclude=Pictures', '--type=d', '.', os.getenv('HOME') },
-  dir_command = { 'fd', '--type=d', '.', os.getenv('HOME') },
+  --   dir_command = { 'fd', '--exclude=Library', '--exclude=Pictures', '--type=d', '.', vim.uv.os_homedir() },
+  dir_command = { 'fd', '--type=d', '.', vim.uv.os_homedir() },
 
   -- The binary used to execute previewer_command | pager_command.
   -- This is needed because termopen in Neovim does not support piping
@@ -59,7 +59,7 @@ local opts = {
     return {
       value = line,
       display = function(entry)
-        return ' ' .. line:gsub(os.getenv('HOME') .. '/', ''),
+        return ' ' .. line:gsub(vim.uv.os_homedir() .. '/', ''),
           { { { 1, 3 }, 'Directory' } }
       end,
       ordinal = line,
